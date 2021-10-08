@@ -1,0 +1,8 @@
+
+Database configurations:
+1-Create config folder in the backend just to make igs well organized.
+2-Create a db.js file to put the Schema, Model, and connection to databse 
+ ****** Bear in mind that connection to databse is asynchronous operation
+so make sure to use asyn await******
+3-It's better to create a Database eith the same esuffix in the MONGO_URI string inside the compass and then
+  connect to it.
