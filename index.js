@@ -1,37 +1,31 @@
 import dotenv from "dotenv";
 import express from "express";
-import posts from "./data/posts.js";
+import postsRoutes from "./routes/postsRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import connectDB from "./config/db.js";
-
+import { ErrorHandler, NotFound } from "./middleware/errorsMiddleware.js";
 // bring in the configuration
 dotenv.config();
 // connecting to the Database......
 connectDB();
 
 const app = express();
+app.use(express.json())
 
-// Main Routes, in futire wll be moved to another seperate Folder
 
-app.get("/api/posts", (req, res) => {
-  res.json(posts);
-});
+//  link the posts Routes
+app.use('/api/posts', postsRoutes);
+app.use('/api/users', userRoutes);
 
-// get one post
-app.get("/api/posts/:id", (req, res) => {
-  console.log(`The comming id is: ${req.params.id}`);
-  const thePost = posts.find((post) => post.id == req.params.id);
-  if (thePost == undefined) {
-    res.status(404).send({
-      statusCode: 400,
-      message: `There's no Post with the specified id: ${req.params.id}`,
-    });
-  }
-  res.json(thePost);
-});
+// A fallback url endpoint response
+app.use(NotFound)
 
+// To override the default Error middleWare, you write tour customized error middleware 
+//  with error, req, res,next
+app.use(ErrorHandler)
 const port = process.env.PORT || 5001;
 app.listen(port, () => {
   console.log("The .env ::: ", process.env.PORT);
 
-  console.log(`App is runnig now in port ${port}.`);
+  console.log(`App is running now in port ${port}.`);
 });
